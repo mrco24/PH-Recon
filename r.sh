@@ -70,7 +70,7 @@ find_urls
 
 valid_urls(){
 ffuf -c -u "fuff -W /root/recon/$domain/url/good-urls.txt -of csv -o /root/recon/$domain/url/ffuf-urls.txt
-cat /root/recon/$domain/url/ffuf_urls.txt | grep http awk -F "," '(print $1)' >> /root/recon/$domain/url/valid_urls.txt
+cat /root/recon/$domain/url/ffuf_urls.txt | grep http | awk -F "," '(print $1)' >> /root/recon/$domain/url/valid_urls.txt
 }
 valid_urls
 
