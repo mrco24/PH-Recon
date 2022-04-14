@@ -1,4 +1,4 @@
- #!/bin/bash
+#!/bin/bash
 
 domain=$1
 wordlist="/root/wordlist/SecLists/Discovery/DNS/subdomains-top1million-5000.txt"
