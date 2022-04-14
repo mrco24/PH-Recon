@@ -15,31 +15,32 @@ python3 /root/install-tools/tools/github-search/github-subdomains.py -t ghp_Pe1v
 curl -s "https://crt.sh/?q=%25.$domain&output=json" | jq -r '.[].name_value' | sed 's/\*\.//g' | sort -u | tee /root/recon/$domain/subdomain/crtsub.txt
 curl -s "https://riddler.io/search/exportcsv?q=pld:$domain" | grep -Po "(([\w.-]*)\.([\w]*)\.([A-z]))\w+" | sort -u | tee /root/recon/$domain/subdomain/riddlersub.txt
 curl -s https://dns.bufferover.run/dns?q=.$domain |jq -r .FDNS_A[]|cut -d',' -f2|sort -u | tee /root/recon/$domain/subdomain/bufferoversub.txt
-curl -s "https://jldc.me/anubis/subdomains/$domain" | grep -Po "((http|https):\/\/)?(([\w.-]*)\.([\w]*)\.([A-z]))\w+" | sort -u | tee root/recon/$domain/subdomain/jldcsub.txt
+curl -s "https://jldc.me/anubis/subdomains/$domain" | grep -Po "((http|https):\/\/)?(([\w.-]*)\.([\w]*)\.([A-z]))\w+" | sort -u | tee /root/recon/$domain/subdomain/jldcsub.txt
 sed -ne 's/^\( *\)Subject:/\1/p;/X509v3 Subject Alternative Name/{
 N;s/^.*\n//;:a;s/^\( *\)\(.*\), /\1\2\n\1/;ta;p;q; }' < <(
 openssl x509 -noout -text -in <(
 openssl s_client -ign_eof 2>/dev/null <<<$'HEAD / HTTP/1.0\r\n\r' \
 -connect $domain:443 ) ) | grep -Po '((http|https):\/\/)?(([\w.-]*)\.([\w]*)\.([A-z]))\w+' | tee /root/recon/$domain/subdomain/altnamesub.txt
 
-cat /root/recon/$domain/subdomain/*.txt > /root/recon/$domain/subdomain/all.txt | cat /root/recon/$domain/subdomain/allsub.txt | sort --unique | tee /root/recon/$domain/subdomain/finalsub.txt
+cat /root/recon/$domain/subdomain/*.txt > /root/recon/$domain/subdomain/all.txt | cat /root/recon/$domain/subdomain/all.txt | sort --unique | tee /root/recon/$domain/subdomain/finalsub.txt
 
 }
 domain_enum
 
+
 resolving_domains(){
 massdns -r $resolver -t A -o S -w /root/recon/$domain/subdomain/finalsub.txt /root/recon/$domain/subdomain/sudomain.txt
-cat /root/recon/$domain/subdomain/sudomain.txt | sed 's/A.*//; s/CN.*// ; s/\..$//' | /root/recon/$domain/subdomain/massdns.txt
+cat /root/recon/$domain/subdomain/sudomain.txt | sed 's/A.*//; s/CN.*// ; s/\..$//' | tee > /root/recon/$domain/subdomain/massdns.txt
 }
 resolving_domains
 
 domain_ip(){
-gf ip /root/recon/$domain/subdomain/massdns.txt | sort -u > root/recon/$domain/subdomain/ip_sub.txt
+gf ip /root/recon/$domain/subdomain/sudomain.txt | sort -u > /root/recon/$domain/subdomain/ip_sub.txt
 }
 domain_ip
 
 http_prob(){
-cat /root/recon/$domain/subdomain/sudomain.txt | httpx -threads 200 -o /root/recon/$domain/subdomain/active_subdomain.txt 
+cat /root/recon/$domain/subdomain/massdns.txt | httpx -threads 200 -o /root/recon/$domain/subdomain/active_subdomain.txt 
 }
 http_prob
 
@@ -51,7 +52,7 @@ web_Screenshot
 scanner(){
 cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/cves/ -c 50 -o /root/recon/$domain/scan/cves.txt
 cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/vulnerabilities/ -c 50 -o /root/recon/$domain/scan/vulnerabilities.txt
-cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/cves/ -c 50 -o /root/recon/$domain/scan/technologies.txt
+cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/technologies/ -c 50 -o /root/recon/$domain/scan/technologies.txt
 }
 scanner
 
