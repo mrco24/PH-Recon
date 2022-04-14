@@ -1,7 +1,7 @@
 #!/bin/bash
 
 domain=$1
-wordlist="/root/wordlist/SecLists/Discovery/DNS/subdomains-top1million-5000.txt"
+wordlist="/root/install-tools/tools/SecLists/Discovery/DNS/subdomains-top1million-110000.txt"
 resolver="/root/install-tools/tools/SecLists/Discovery/DNS/resolvers.txt"
 
 domain_enum(){
@@ -22,11 +22,20 @@ openssl x509 -noout -text -in <(
 openssl s_client -ign_eof 2>/dev/null <<<$'HEAD / HTTP/1.0\r\n\r' \
 -connect $domain:443 ) ) | grep -Po '((http|https):\/\/)?(([\w.-]*)\.([\w]*)\.([A-z]))\w+' | tee /root/recon/$domain/subdomain/altnamesub.txt
 
-cat /root/recon/$domain/subdomain/*.txt > /root/recon/$domain/subdomain/all.txt | cat /root/recon/$domain/subdomain/all.txt | sort --unique | tee /root/recon/$domain/subdomain/finalsub.txt
+cat /root/recon/$domain/subdomain/*.txt > /root/recon/$domain/subdomain/allsub.txt | cat /root/recon/$domain/subdomain/allsub.txt | sort --unique | tee /root/recon/$domain/subdomain/all_srot_sub.txt
 
 }
 domain_enum
 
+Fast_prob(){
+cat /root/recon/$domain/subdomain/all_srot_sub.txt | httpx -threads 200 -o /root/recon/$domain/subdomain/httpxsub.txt 
+}
+Fast_prob
+
+sub_brut(){
+altdns -i /root/recon/$domain/subdomain/httpxsub.txt -w $wordlist -o finalsub.txt
+}
+sub_brut
 
 resolving_domains(){
 massdns -r $resolver -t A -o S -w /root/recon/$domain/subdomain/sudomain.txt /root/recon/$domain/subdomain/finalsub.txt
