@@ -29,7 +29,7 @@ domain_enum
 
 
 resolving_domains(){
-massdns -r $resolver -t A -o S -w /root/recon/$domain/subdomain/finalsub.txt /root/recon/$domain/subdomain/sudomain.txt
+massdns -r $resolver -t A -o S -w /root/recon/$domain/subdomain/sudomain.txt /root/recon/$domain/subdomain/finalsub.txt
 cat /root/recon/$domain/subdomain/sudomain.txt | sed 's/A.*//; s/CN.*// ; s/\..$//' | tee > /root/recon/$domain/subdomain/massdns.txt
 }
 resolving_domains
