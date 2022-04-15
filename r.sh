@@ -33,7 +33,7 @@ cat /root/recon/$domain/subdomain/all_srot_sub.txt | httpx -threads 200 -o /root
 Fast_prob
 
 sub_brut(){
-altdns -i /root/recon/$domain/subdomain/httpxsub.txt -w $wordlist -o finalsub.txt
+altdns -i /root/recon/$domain/subdomain/httpxsub.txt -w $wordlist -o /root/recon/$domain/subdomain/finalsub.txt
 }
 sub_brut
 
