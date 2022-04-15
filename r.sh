@@ -59,9 +59,17 @@ gowitness file -f /root/recon/$domain/subdomain/active_subdomain.txt
 web_Screenshot
 
 scanner(){
-cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/cves/ -c 50 -o /root/recon/$domain/scan/cves.txt
-cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/vulnerabilities/ -c 50 -o /root/recon/$domain/scan/vulnerabilities.txt
-cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/technologies/ -c 50 -o /root/recon/$domain/scan/technologies.txt
+cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/cves/ -o  /root/recon/$domain/scan/cves.txt -v
+cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/vulnerabilities/ -o  /root/recon/$domain/scan/vulnerabilities.txt -v
+cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/technologies/ -o  /root/recon/$domain/scan/technologies.txt -v
+cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/My-Nuclei-Templates/ -o  /root/recon/$domain/scan/My-Nuclei-Templates.txt -v
+cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/workflows/ -o /root/recon/$domain/scan/workflows.txt -v
+cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/backflow/ -o /root/recon/$domain/scan/backflow.txt -v
+cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/idscan/ -o /root/recon/$domain/scan/idscan.txt -v
+cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/network/ -o /root/recon/$domain/scan/network.txt -v
+cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/cves/ -c 50 -o /root/recon/$domain/scan/new-cves.txt
+cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/vulnerabilities/ -c 50 -o /root/recon/$domain/scan/new-vulnerabilities.txt
+cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/technologies/ -c 50 -o /root/recon/$domain/scan/new-technologies.txt
 }
 scanner
 
