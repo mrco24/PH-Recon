@@ -1,11 +1,12 @@
 #!/bin/bash
 
-domain=$1
+host=$1
 wordlist="/root/install-tools/tools/SecLists/Discovery/DNS/subdomains-top1million-110000.txt"
 resolver="/root/install-tools/tools/SecLists/Discovery/DNS/resolvers.txt"
 
 domain_enum(){
-
+for domain in $(cat $host);
+do
 mkdir -p /root/recon/$domain/subdomain /root/recon/$domain/scan /root/recon/$domain/url /root/recon/$domain/gf /root/recon/$domain/xss
 
 subfinder -d $domain -o /root/recon/$domain/subdomain/subfinder.txt
@@ -23,42 +24,54 @@ openssl s_client -ign_eof 2>/dev/null <<<$'HEAD / HTTP/1.0\r\n\r' \
 -connect $domain:443 ) ) | grep -Po '((http|https):\/\/)?(([\w.-]*)\.([\w]*)\.([A-z]))\w+' | tee /root/recon/$domain/subdomain/altnamesub.txt
 
 cat /root/recon/$domain/subdomain/*.txt > /root/recon/$domain/subdomain/allsub.txt | cat /root/recon/$domain/subdomain/allsub.txt | sort --unique | tee /root/recon/$domain/subdomain/all_srot_sub.txt
-
+done
 }
 domain_enum
 
-Fast_prob(){
-cat /root/recon/$domain/subdomain/all_srot_sub.txt | httpx -threads 200 -o /root/recon/$domain/subdomain/httpxsub.txt 
-}
-Fast_prob
-
 sub_brut(){
-altdns -i /root/recon/$domain/subdomain/httpxsub.txt -w $wordlist -o /root/recon/$domain/subdomain/finalsub.txt
+for domain in $(cat $host);
+do
+altdns -i /root/recon/$domain/subdomain/all_srot_sub.txt -w $wordlist -o /root/recon/$domain/subdomain/finalsub.txt
+done
 }
 sub_brut
 
 resolving_domains(){
+for domain in $(cat $host);
+do
 massdns -r $resolver -t A -o S -w /root/recon/$domain/subdomain/sudomain.txt /root/recon/$domain/subdomain/finalsub.txt
 cat /root/recon/$domain/subdomain/sudomain.txt | sed 's/A.*//; s/CN.*// ; s/\..$//' | tee > /root/recon/$domain/subdomain/massdns.txt
+done
 }
 resolving_domains
 
 domain_ip(){
+for domain in $(cat $host);
+do
 gf ip /root/recon/$domain/subdomain/sudomain.txt | sort -u > /root/recon/$domain/subdomain/ip_sub.txt
+done
 }
 domain_ip
 
 http_prob(){
+for domain in $(cat $host);
+do
 cat /root/recon/$domain/subdomain/massdns.txt | httpx -threads 200 -o /root/recon/$domain/subdomain/active_subdomain.txt 
+done
 }
 http_prob
 
 web_Screenshot(){
+for domain in $(cat $host);
+do
 gowitness file -f /root/recon/$domain/subdomain/active_subdomain.txt
+done
 }
 web_Screenshot
 
 scanner(){
+for domain in $(cat $host);
+do
 cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/cves/ -o  /root/recon/$domain/scan/cves.txt -v
 cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/vulnerabilities/ -o  /root/recon/$domain/scan/vulnerabilities.txt -v
 cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/technologies/ -o  /root/recon/$domain/scan/technologies.txt -v
@@ -71,10 +84,13 @@ cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/n
 cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/cves/ -c 50 -o /root/recon/$domain/scan/new-cves.txt
 cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/vulnerabilities/ -c 50 -o /root/recon/$domain/scan/new-vulnerabilities.txt
 cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/technologies/ -c 50 -o /root/recon/$domain/scan/new-technologies.txt
+done
 }
 scanner
 
 find_urls(){
+for domain in $(cat $host);
+do
 cat /root/recon/$domain/subdomain/active_subdomain.txt | waybackurls | tee /root/recon/$domain/url/waybackurls.txt
 cat /root/recon/$domain/subdomain/active_subdomain.txt | hakrawler > /root/recon/$domain/url/hakrawler-urls.txt
 gospider -S /root/recon/$domain/subdomain/active_subdomain.txt -c 10 -d 1 --other-source | tee /root/recon/$domain/url/gospider-url.txt
@@ -83,23 +99,33 @@ python3 /root/install-tools/tools/ParamSpider/paramspider.py --domain $domain -o
 cat /root/recon/$domain/url/*.txt > /root/recon/$domain/url/all-url.txt | cat /root/recon/$domain/url/all-url.txt | sort --unique | tee /root/recon/$domain/url/final-url.txt
 cat /root/recon/$domain/url/final-url.txt | egrep -v "\.woff|\.ttf|\.svg|\.eot|\.png|\.jpep|\.svg|\.css|\.ico" | sed 's/:88//9;s/:443//g' | sort -u >> /root/recon/$domain/url/good-urls.txt
 rm -r /root/recon/$domain/url/all-url.txt
+done
 }
 find_urls
 
 valid_urls(){
+for domain in $(cat $host);
+do
 ffuf -c -u "fuff -W /root/recon/$domain/url/good-urls.txt -of csv -o /root/recon/$domain/url/ffuf-urls.txt
 cat /root/recon/$domain/url/ffuf_urls.txt | grep http | awk -F "," '(print $1)' >> /root/recon/$domain/url/valid_urls.txt
+done
 }
 valid_urls
 
 gf_patterns(){
+for domain in $(cat $host);
+do
 gf xss /root/recon/$domain/url/valid_urls.txt | tee /root/recon/$domain/gf/xss.txt
 gf sqli /root/recon/$domain/url/valid_urls.txt | tee /root/recon/$domain/gf/sqli.txt
+done
 }
 gf_patterns
 
 Refactors_xss(){
+for domain in $(cat $host);
+do
 cat /root/recon/$domain/url/valid_urls.txt | Gxss -o /root/recon/$domain/xss/gxss.txt
-cat /root/recon/$domain/url/valid_urls.txt | kxss > /root/recon/$domain/xss/kxss-url.txt
+cat /root/recon/$domain/url/valid_urls.txt | kxss > /root/recon/$domain/xss/kxss_url.txt
+done
 }
 Refactors_xss
