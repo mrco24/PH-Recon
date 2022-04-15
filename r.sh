@@ -48,7 +48,7 @@ resolving_domains
 domain_ip(){
 for domain in $(cat $host);
 do
-gf ip /root/recon/$domain/subdomain/sudomain.txt | sort -u > /root/recon/$domain/subdomain/ip_sub.txt
+gf ip /root/recon/$domain/subdomain/sudomain.txt | sed 's/.*://' > /root/recon/$domain/subdomain/ip_sub.txt
 done
 }
 domain_ip
