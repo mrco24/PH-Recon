@@ -11,7 +11,8 @@ mkdir -p /root/recon/$domain/subdomain /root/recon/$domain/scan /root/recon/$dom
 
 subfinder -d $domain -o /root/recon/$domain/subdomain/subfinder.txt
 assetfinder -subs-only $domain | tee /root/recon/$domain/subdomain/assetfinder.txt 
-findomain -t hackerone.com | tee /root/recon/$domain/subdomain/findomain.txt
+findomain -t $domain | tee /root/recon/$domain/subdomain/findomain.txt
+amass enum -active -d $domain -o /root/recon/$domain/subdomain/amass_sub.txt
 python3 /root/install-tools/tools/github-search/github-subdomains.py -t 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 -d $domain > /root/recon/$domain/subdomain/gitsub.txt
 curl -s "https://crt.sh/?q=%25.$domain&output=json" | jq -r '.[].name_value' | sed 's/\*\.//g' | sort -u | tee /root/recon/$domain/subdomain/crtsub.txt
 curl -s "https://riddler.io/search/exportcsv?q=pld:$domain" | grep -Po "(([\w.-]*)\.([\w]*)\.([A-z]))\w+" | sort -u | tee /root/recon/$domain/subdomain/riddlersub.txt
@@ -22,25 +23,16 @@ N;s/^.*\n//;:a;s/^\( *\)\(.*\), /\1\2\n\1/;ta;p;q; }' < <(
 openssl x509 -noout -text -in <(
 openssl s_client -ign_eof 2>/dev/null <<<$'HEAD / HTTP/1.0\r\n\r' \
 -connect $domain:443 ) ) | grep -Po '((http|https):\/\/)?(([\w.-]*)\.([\w]*)\.([A-z]))\w+' | tee /root/recon/$domain/subdomain/altnamesub.txt
-
+shuffledns -d $domain -r $resolver  -w $wordlist -o /root/recon/$domain/subdomain/shuffledns.txt -v
 cat /root/recon/$domain/subdomain/*.txt > /root/recon/$domain/subdomain/allsub.txt | cat /root/recon/$domain/subdomain/allsub.txt | sort --unique | tee /root/recon/$domain/subdomain/all_srot_sub.txt
 done
 }
 domain_enum
 
-sub_brut(){
-for domain in $(cat $host);
-do
-altdns -i /root/recon/$domain/subdomain/all_srot_sub.txt -w $wordlist -o /root/recon/$domain/subdomain/finalsub.txt
-done
-}
-sub_brut
-
 resolving_domains(){
 for domain in $(cat $host);
 do
-massdns -r $resolver -t A -o S -w /root/recon/$domain/subdomain/sudomain.txt /root/recon/$domain/subdomain/finalsub.txt
-cat /root/recon/$domain/subdomain/sudomain.txt | sed 's/A.*//; s/CN.*// ; s/\..$//' | tee > /root/recon/$domain/subdomain/massdns.txt
+shuffledns -list /root/recon/zellepay.com/subdomain/all_srot_sub.txt -r $resolver -o /root/recon/$domain/subdomain/resolver_sub.txt -v
 done
 }
 resolving_domains
@@ -48,7 +40,8 @@ resolving_domains
 domain_ip(){
 for domain in $(cat $host);
 do
-gf ip /root/recon/$domain/subdomain/sudomain.txt | sed 's/.*://' > /root/recon/$domain/subdomain/ip_sub.txt
+massdns -r $resolver -t A -o S -w /root/recon/$domain/subdomain/massdns.txt /root/recon/$domain/subdomain/resolver_sub.txt
+gf ip /root/recon/$domain/subdomain/massdns.txt | sed 's/.*://' > /root/recon/$domain/subdomain/ip_sub.txt
 done
 }
 domain_ip
@@ -56,7 +49,7 @@ domain_ip
 http_prob(){
 for domain in $(cat $host);
 do
-cat /root/recon/$domain/subdomain/massdns.txt | httpx -threads 200 -o /root/recon/$domain/subdomain/active_subdomain.txt 
+cat /root/recon/$domain/subdomain/resolver_sub.txt | httpx -threads 200 -o /root/recon/$domain/subdomain/active_subdomain.txt 
 done
 }
 http_prob
