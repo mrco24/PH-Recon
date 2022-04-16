@@ -7,7 +7,7 @@ resolver="/root/wordlist/resolvers.txt"
 domain_enum(){
 for domain in $(cat $host);
 do
-mkdir -p /root/recon/$domain/subdomain /root/recon/$domain/scan /root/recon/$domain/url /root/recon/$domain/gf /root/recon/$domain/xss /root/recon/$domain/js_url
+mkdir -p /root/recon/$domain/subdomain /root/recon/$domain/scan /root/recon/$domain/url /root/recon/$domain/gf /root/recon/$domain/xss /root/recon/$domain/js_url /root/recon/$domain/git_dork /root/recon/$domain/SQL
 
 subfinder -d $domain -o /root/recon/$domain/subdomain/subfinder.txt
 assetfinder -subs-only $domain | tee /root/recon/$domain/subdomain/assetfinder.txt 
@@ -131,3 +131,19 @@ cat /root/recon/$domain/url/valid_urls.txt | kxss > /root/recon/$domain/xss/kxss
 done
 }
 Refactors_xss
+
+SQL(){
+for domain in $(cat $host);
+do
+cat /root/recon/$domain/gf/sqli.txt | nuclei -t /root/tools/nuclei-templates/My-Nuclei-Templates/SQL/SQLInjection_ERROR.yaml -o /root/recon/$domain/SQL/sqlpoc.txt -v
+done
+}
+SQL
+
+Git_dork(){
+for domain in $(cat $host);
+do
+python3 /root/install-tools/tools/GitDorker/GitDorker.py -tf /root/install-tools/tools/GitDorker/token.txt -q $domain -d /root/install-tools/tools/GitDorker/Dorks/medium_dorks.txt -o /root/recon/$domain/git_dork/medium_dorks.txt
+done
+}
+Git_dork
