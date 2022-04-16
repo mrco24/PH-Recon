@@ -23,7 +23,7 @@ N;s/^.*\n//;:a;s/^\( *\)\(.*\), /\1\2\n\1/;ta;p;q; }' < <(
 openssl x509 -noout -text -in <(
 openssl s_client -ign_eof 2>/dev/null <<<$'HEAD / HTTP/1.0\r\n\r' \
 -connect $domain:443 ) ) | grep -Po '((http|https):\/\/)?(([\w.-]*)\.([\w]*)\.([A-z]))\w+' | tee /root/recon/$domain/subdomain/altnamesub.txt
-shuffledns -d $domain -r $resolver  -w $wordlist -o /root/recon/$domain/subdomain/shuffledns.txt -v
+puredns bruteforce $wordlist $domain -r $resolver -w /root/recon/$domain/subdomain/puredns.txt
 cat /root/recon/$domain/subdomain/*.txt > /root/recon/$domain/subdomain/allsub.txt | cat /root/recon/$domain/subdomain/allsub.txt | sort --unique | tee /root/recon/$domain/subdomain/all_srot_sub.txt
 done
 }
@@ -32,7 +32,8 @@ domain_enum
 resolving_domains(){
 for domain in $(cat $host);
 do
-shuffledns -list /root/recon/zellepay.com/subdomain/all_srot_sub.txt -r $resolver -o /root/recon/$domain/subdomain/resolver_sub.txt -v
+massdns -r $resolver -t A -o S -w /root/recon/$domain/subdomain/massdns.txt /root/recon/$domain/subdomain/all_srot_sub.txt
+cat /root/recon/$domain/subdomain/massdns.txt | sed 's/A.*//; s/CN.*// ; s/\..$//' | tee > /root/recon/$domain/subdomain/final_sub.txt
 done
 }
 resolving_domains
@@ -40,7 +41,6 @@ resolving_domains
 domain_ip(){
 for domain in $(cat $host);
 do
-massdns -r $resolver -t A -o S -w /root/recon/$domain/subdomain/massdns.txt /root/recon/$domain/subdomain/resolver_sub.txt
 gf ip /root/recon/$domain/subdomain/massdns.txt | sed 's/.*://' > /root/recon/$domain/subdomain/ip_sub.txt
 done
 }
@@ -49,7 +49,7 @@ domain_ip
 http_prob(){
 for domain in $(cat $host);
 do
-cat /root/recon/$domain/subdomain/resolver_sub.txt | httpx -threads 200 -o /root/recon/$domain/subdomain/active_subdomain.txt 
+cat /root/recon/$domain/subdomain/final_sub.txt | httpx -threads 200 -o /root/recon/$domain/subdomain/active_subdomain.txt 
 done
 }
 http_prob
