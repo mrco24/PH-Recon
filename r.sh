@@ -1,13 +1,13 @@
 #!/bin/bash
 
 host=$1
-wordlist="/root/install-tools/tools/SecLists/Discovery/DNS/subdomains-top1million-110000.txt"
-resolver="/root/install-tools/tools/SecLists/Discovery/DNS/resolvers.txt"
+wordlist="/root/wordlist/all.txt"
+resolver="/root/wordlist/resolvers.txt"
 
 domain_enum(){
 for domain in $(cat $host);
 do
-mkdir -p /root/recon/$domain/subdomain /root/recon/$domain/scan /root/recon/$domain/url /root/recon/$domain/gf /root/recon/$domain/xss
+mkdir -p /root/recon/$domain/subdomain /root/recon/$domain/scan /root/recon/$domain/url /root/recon/$domain/gf /root/recon/$domain/xss /root/recon/$domain/js_url
 
 subfinder -d $domain -o /root/recon/$domain/subdomain/subfinder.txt
 assetfinder -subs-only $domain | tee /root/recon/$domain/subdomain/assetfinder.txt 
@@ -104,6 +104,15 @@ cat /root/recon/$domain/url/ffuf_urls.txt | grep http | awk -F "," '(print $1)' 
 done
 }
 valid_urls
+
+Get_js(){
+for domain in $(cat $host);
+do
+cat /root/recon/$domain/url/valid_urls.txt | getJS --complete | tee /root/recon/$domain/js_url/getjs_urls.txt
+cat /root/recon/$domain/url/valid_urls.tx | grep '\.js$' | httpx -status-code -mc 200 -content-type | grep 'application/javascript' | tee /root/recon/$domain/js_url/jshttpxurl.txt
+done
+}
+Get_js
 
 gf_patterns(){
 for domain in $(cat $host);
