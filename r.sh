@@ -89,20 +89,13 @@ cat /root/recon/$domain/subdomain/active_subdomain.txt | waybackurls | tee /root
 cat /root/recon/$domain/subdomain/active_subdomain.txt | hakrawler > /root/recon/$domain/url/hakrawler-urls.txt
 gospider -S /root/recon/$domain/subdomain/active_subdomain.txt -c 10 -d 1 --other-source | tee /root/recon/$domain/url/gospider-url.txt
 cat /root/recon/$domain/subdomain/active_subdomain.txt | gau --threads 5 > /root/recon/$domain/url/gau-urls.txt
-cat /root/recon/$domain/url/*.txt > /root/recon/$domain/url/all-url.txt | cat /root/recon/$domain/url/all-url.txt | sort --unique | tee /root/recon/$domain/url/final-url.txt
-cat /root/recon/$domain/url/final-url.txt | egrep -v "\.woff|\.ttf|\.svg|\.eot|\.png|\.jpep|\.svg|\.css|\.ico" | sed 's/:88//9;s/:443//g' | sort -u >> /root/recon/$domain/url/good-urls.txt
+cat /root/recon/$domain/url/*.txt > /root/recon/$domain/url/all-url.txt
+cat /root/recon/$domain/url/all-url.txt | sort --unique | tee /root/recon/$domain/url/final-url.txt
+cat /root/recon/$domain/url/final-url.txt | egrep -v "\.woff|\.ttf|\.svg|\.eot|\.png|\.jpep|\.svg|\.css|\.ico" | sed 's/:88//9;s/:443//g' | sort -u >> /root/recon/$domain/url/valid_urls.txt
 done
 }
 find_urls
 
-valid_urls(){
-for domain in $(cat $host);
-do
-ffuf -c -u "fuff -W /root/recon/$domain/url/good-urls.txt -of csv -o /root/recon/$domain/url/ffuf_urls.txt
-cat /root/recon/$domain/url/ffuf_urls.txt | grep http | awk -F "," '{print $1}' >> /root/recon/$domain/url/valid_urls.txt
-done
-}
-valid_urls
 
 Get_js(){
 for domain in $(cat $host);
