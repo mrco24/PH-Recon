@@ -87,7 +87,7 @@ for domain in $(cat $host);
 do
 cat /root/recon/$domain/subdomain/active_subdomain.txt | waybackurls | tee /root/recon/$domain/url/waybackurls.txt
 cat /root/recon/$domain/subdomain/active_subdomain.txt | hakrawler > /root/recon/$domain/url/hakrawler-urls.txt
-gospider -S /root/recon/$domain/subdomain/active_subdomain.txt -c 10 -d 1 --other-source | tee /root/recon/$domain/url/gospider-url.txt
+gospider -S /root/recon/$domain/subdomain/active_subdomain.txt -c 10 -d 1 --other-source | grep $domain | tee /root/recon/$domain/url/gospider-url.txt
 cat /root/recon/$domain/subdomain/active_subdomain.txt | gau --threads 5 > /root/recon/$domain/url/gau-urls.txt
 cat /root/recon/$domain/url/*.txt > /root/recon/$domain/url/all-url.txt
 cat /root/recon/$domain/url/all-url.txt | sort --unique | tee /root/recon/$domain/url/final-url.txt
