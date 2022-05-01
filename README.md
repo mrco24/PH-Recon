@@ -26,7 +26,7 @@ Below are all the tools that must be installed so install these tools first and 
 
 
 # TOOLS Used:
-Subfinder.
+(Subfinder)
 Amass.
 Assetfinder.
 findomain.
