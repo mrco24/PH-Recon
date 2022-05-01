@@ -28,30 +28,30 @@ Below are all the tools that must be installed so install these tools first and 
 
 
 # TOOLS Used:
-[Subfinder]
-[Amass]
-Assetfinder.
-findomain.
-crt.sh.
-riddler.io.
-bufferover.run.
-jldc.me.
-massdns.
-httpx.
-subzy.
-Gowitness.
-Gospider.
-Hakrawler.
-ParamSpider.
-gau.
-waybackurls.
-paramspider.
-ffuf.
-nuclei.
-dalfox.
-sqlmap.
+- Subfinder
+- Amass
+- Assetfinder.
+- findomain.
+- crt.sh.
+- riddler.io.
+- bufferover.run.
+- jldc.me.
+- massdns.
+- httpx.
+- subzy.
+- Gowitness.
+- Gospider.
+- Hakrawler.
+- ParamSpider.
+- gau.
+- waybackurls.
+- paramspider.
+- ffuf.
+- nuclei.
+- dalfox.
+- sqlmap.
 
 # Author:
- https://www.facebook.com/MRCO24
- https://www.youtube.com/channel/UCakzx9mgKjh9V2CjwCJ7kwA
- https://github.com/mrco24
+ - https://www.facebook.com/MRCO24
+ - https://www.youtube.com/channel/UCakzx9mgKjh9V2CjwCJ7kwA
+ - https://github.com/mrco24
