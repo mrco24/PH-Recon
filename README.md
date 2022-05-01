@@ -1,5 +1,5 @@
 # Current Features:
-1) This script will collect all the subdomains using amass, # assetfinder, subfinder, findomain, and crt.sh, riddler.io, jldc.me, nmap.
+1) This script will collect all the subdomains using amass,  *assetfinder*, subfinder, findomain, and crt.sh, riddler.io, jldc.me, nmap.
 2) Gather all the subdomains and put them in a single .txt file.
 3) Resolves all the subdomains using massdns
 4) Check http/https services on the given domains using httpx tool.
