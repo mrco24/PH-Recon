@@ -13,7 +13,6 @@ subfinder -d $domain -o /root/recon/$domain/subdomain/subfinder.txt
 assetfinder -subs-only $domain | tee /root/recon/$domain/subdomain/assetfinder.txt 
 findomain -t $domain | tee /root/recon/$domain/subdomain/findomain.txt
 amass enum -active -d $domain -o /root/recon/$domain/subdomain/amass_sub.txt
-python3 /root/install-tools/tools/github-search/github-subdomains.py -t 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 -d $domain > /root/recon/$domain/subdomain/gitsub.txt
 curl -s "https://crt.sh/?q=%25.$domain&output=json" | jq -r '.[].name_value' | sed 's/\*\.//g' | sort -u | tee /root/recon/$domain/subdomain/crtsub.txt
 curl -s "https://riddler.io/search/exportcsv?q=pld:$domain" | grep -Po "(([\w.-]*)\.([\w]*)\.([A-z]))\w+" | sort -u | tee /root/recon/$domain/subdomain/riddlersub.txt
 curl -s https://dns.bufferover.run/dns?q=.$domain |jq -r .FDNS_A[]|cut -d',' -f2|sort -u | tee /root/recon/$domain/subdomain/bufferoversub.txt
@@ -23,7 +22,6 @@ N;s/^.*\n//;:a;s/^\( *\)\(.*\), /\1\2\n\1/;ta;p;q; }' < <(
 openssl x509 -noout -text -in <(
 openssl s_client -ign_eof 2>/dev/null <<<$'HEAD / HTTP/1.0\r\n\r' \
 -connect $domain:443 ) ) | grep -Po '((http|https):\/\/)?(([\w.-]*)\.([\w]*)\.([A-z]))\w+' | tee /root/recon/$domain/subdomain/altnamesub.txt
-puredns bruteforce $wordlist $domain -r $resolver -w /root/recon/$domain/subdomain/puredns.txt
 cat /root/recon/$domain/subdomain/*.txt > /root/recon/$domain/subdomain/allsub.txt
 cat /root/recon/$domain/subdomain/allsub.txt | sort --unique | tee /root/recon/$domain/subdomain/all_srot_sub.txt
 done
@@ -66,15 +64,6 @@ web_Screenshot
 scanner(){
 for domain in $(cat $host);
 do
-cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/cves/ -o  /root/recon/$domain/scan/cves.txt -v
-cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/vulnerabilities/ -o  /root/recon/$domain/scan/vulnerabilities.txt -v
-cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/technologies/ -o  /root/recon/$domain/scan/technologies.txt -v
-cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/My-Nuclei-Templates/ -o  /root/recon/$domain/scan/My-Nuclei-Templates.txt -v
-cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/workflows/ -o /root/recon/$domain/scan/workflows.txt -v
-cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/backflow/ -o /root/recon/$domain/scan/backflow.txt -v
-cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/idscan/ -o /root/recon/$domain/scan/idscan.txt -v
-cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/network/ -o /root/recon/$domain/scan/network.txt -v
-cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/tools/nuclei-templates/exposures/ -o /root/recon/$domain/scan/exposures.txt -v
 cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/cves/ -c 50 -o /root/recon/$domain/scan/new-cves.txt
 cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/vulnerabilities/ -c 50 -o /root/recon/$domain/scan/new-vulnerabilities.txt
 cat /root/recon/$domain/subdomain/active_subdomain.txt | nuclei -t /root/nuclei-templates/technologies/ -c 50 -o /root/recon/$domain/scan/new-technologies.txt
@@ -111,6 +100,7 @@ for domain in $(cat $host);
 do
 gf xss /root/recon/$domain/url/valid_urls.txt | tee /root/recon/$domain/gf/xss.txt
 gf sqli /root/recon/$domain/url/valid_urls.txt | tee /root/recon/$domain/gf/sqli.txt
+gf lfi /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/lfi.txt
 done
 }
 gf_patterns
@@ -120,6 +110,8 @@ for domain in $(cat $host);
 do
 cat /root/recon/$domain/url/valid_urls.txt | Gxss -o /root/recon/$domain/xss/gxss.txt
 cat /root/recon/$domain/url/valid_urls.txt | kxss > /root/recon/$domain/xss/kxss_url.txt
+cat /root/recon/$domain/xss/kxss_url.txt | sed 's/.*on//' | sed 's/=.*/=/' > /root/recon/$domain/xss/kxss_url_active.txt
+cat /root/recon/$domain/xss/kxss_url_active.txt | dalfox pipe | tee /root/recon/$domain/xss/dalfoxss.txt
 done
 }
 Refactors_xss
@@ -127,10 +119,20 @@ Refactors_xss
 SQL(){
 for domain in $(cat $host);
 do
-cat /root/recon/$domain/gf/sqli.txt | nuclei -t /root/tools/nuclei-templates/My-Nuclei-Templates/SQL/SQLInjection_ERROR.yaml -o /root/recon/$domain/SQL/sqlpoc.txt -v
+sqlmap -m /root/recon/$domain/gf/sqli.txt --batch --random-agent --level 1 | tee /root/recon/$domain/SQL/sqlpoc.txt -v
 done
 }
 SQL
+
+LFI(){
+for domain in $(cat $host);
+do
+cat /root/recon/$domain/gf/lfi.txt | qsreplace FUZZ | while read url ; do ffuf -u $url -mr "root:x" -w ~/tools/lfipayloads.txt -of csv -o $domain/vulnerabilities/LFI/lfi.txt -t 50 -c  ; done
+}
+menu(){
+done
+}
+LFI
 
 Git_dork(){
 for domain in $(cat $host);
