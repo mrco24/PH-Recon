@@ -2,7 +2,9 @@
 Below are all the tools that must be installed so install these tools first and your terminal must be rooted otherwise it may be a problem to install the tools.
 
 # Installation:
-
+git clone https://github.com/mrco24/PH-RECON.git
+cd PH-RECON
+chmod +x PH-Recon.sh
 # Usage:
 ./Okvps.sh sub.txt
 
