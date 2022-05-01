@@ -5,7 +5,7 @@
 4) Check http/https services on the given domains using httpx tool.
 5) All Active Subdomain Screenshot
 6) Able to separate all ip of all subdomain using gf tools
-7) This script will collect all the urls using #waybackurl, gau, gospider,
+7) This script will collect all the urls using Waybackurl, Gau, gospider, ParamSpider, hakrawler.
 8) Gather all the urls and put them in a single .txt file.
 9) This script will  Able to sort all the good Urals by filtering.
 10) FFUF is used in this script to find valid urls.
