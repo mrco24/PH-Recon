@@ -50,6 +50,6 @@ dalfox.
 sqlmap.
 
 # Author:
-https://www.facebook.com/MRCO24
-https://www.youtube.com/channel/UCakzx9mgKjh9V2CjwCJ7kwA
-https://github.com/mrco24
+ https://www.facebook.com/MRCO24
+ https://www.youtube.com/channel/UCakzx9mgKjh9V2CjwCJ7kwA
+ https://github.com/mrco24
