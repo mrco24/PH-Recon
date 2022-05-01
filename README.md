@@ -1,5 +1,13 @@
+# Requirements:
+Below are all the tools that must be installed so install these tools first and your terminal must be rooted otherwise it may be a problem to install the tools.
+
+# Installation:
+
+# Usage:
+./Okvps.sh sub.txt
+
 # Current Features:
-1) This script will collect all the subdomains using amass, assetfinder, subfinder, findomain, and crt.sh, riddler.io, jldc.me, nmap.
+1) This script will collect all the subdomains using amass, assetfinder, subfinder, findomain, and crt.sh, riddler.io, jldc.me, nmap.bufferover.run
 2) Gather all the subdomains and put them in a single .txt file.
 3) Resolves all the subdomains using massdns
 4) Check http/https services on the given domains using httpx tool.
@@ -15,3 +23,34 @@
 14) Nuclei scan All Active Subdomain
 15) Advance XSS Scanner
 16) Sqli Scan All urls 
+
+
+# TOOLS Used:
+Subfinder
+Amass
+Assetfinder
+findomain
+crt.sh
+riddler.io
+bufferover.run
+jldc.me
+nmap
+massdns
+httpx
+subzy
+Gowitness
+Gospider
+Hakrawler
+ParamSpider
+gau
+waybackurls
+paramspider
+ffuf
+nuclei
+dalfox
+sqlmap
+
+# Author:
+https://www.facebook.com/MRCO24
+https://www.youtube.com/channel/UCakzx9mgKjh9V2CjwCJ7kwA
+https://github.com/mrco24
