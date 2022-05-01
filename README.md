@@ -26,8 +26,9 @@ Below are all the tools that must be installed so install these tools first and 
 
 
 # TOOLS Used:
-(Subfinder)
-Amass.
+
+[Subfinder]
+[Amass]
 Assetfinder.
 findomain.
 crt.sh.
