@@ -137,7 +137,7 @@ LFI
 Git_dork(){
 for domain in $(cat $host);
 do
-python3 /root/install-tools/tools/GitDorker/GitDorker.py -tf /root/install-tools/tools/GitDorker/token.txt -q $domain -d /root/install-tools/tools/GitDorker/Dorks/medium_dorks.txt -o /root/recon/$domain/git_dork/medium_dorks.txt
+python3 /root/Okvps/tools/GitDorker/GitDorker.py -tf /root/Okvps/tools/GitDorker/token.txt -q $domain -d /root/Okvps/tools/GitDorker/Dorks/medium_dorks.txt -o /root/recon/$domain/git_dork/medium_dorks.txt
 done
 }
 Git_dork
