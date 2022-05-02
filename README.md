@@ -54,6 +54,7 @@ Below are all the tools that must be installed so install these https://github.c
 - riddler.io
 - bufferover.run
 - jldc.me
+# Subdomain-Resolver
 - massdns
 - httprobe
 # Subdomain-takeover
