@@ -18,11 +18,11 @@
 Below are all the tools that must be installed so install these https://github.com/mrco24/OK-VPS tools first and your terminal must be rooted otherwise it may be a problem to install the tools and script in add your Resolver path 
 
 # Installation:
-- git clone https://github.com/mrco24/PH-RECON.git 
-- cd PH-RECON                                                                                                                   
+- git clone https://github.com/mrco24/PH-Recon 
+- cd PH-Recon                                                                                                                   
 - chmod +x PH-Recon.sh
 # Usage:
-- ./Okvps.sh sub.txt
+- ./PH-Recon.sh sub.txt
 
 # Current Features:
 - This script will collect all the subdomains using amass, assetfinder, subfinder, findomain, and crt.sh, riddler.io, jldc.me, nmap.bufferover.run
