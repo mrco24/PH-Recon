@@ -44,6 +44,8 @@ Below are all the tools that must be installed so install these https://github.c
 
 
 # TOOLS Used:
+
+# Subdomain
 - Subfinder
 - Amass
 - Assetfinder
@@ -54,20 +56,30 @@ Below are all the tools that must be installed so install these https://github.c
 - jldc.me
 - massdns
 - httprobe
+# Subdomain-takeover
 - subzy
+# Web-screenshot
 - Gowitness
+# Urls-find
 - Gospider
 - Hakrawler
 - ParamSpider
 - gau
 - waybackurls
 - paramspider
+# FUZZ
 - ffuf
+# Vulnerability scan
 - nuclei
+# XSS
 - dalfox
 - kxss
 - Gxss
+# LFI
+- lfi
+# Gf-patterns-Domain-ip
 - gf
+# Sql-ijection
 - sqlmap
 
 # Author:
