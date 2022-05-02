@@ -15,7 +15,7 @@
 </p>
 
 # Requirements:
-Below are all the tools that must be installed so install these https://github.com/mrco24/OK-VPS tools first and your terminal must be rooted otherwise it may be a problem to install the tools.
+Below are all the tools that must be installed so install these https://github.com/mrco24/OK-VPS tools first and your terminal must be rooted otherwise it may be a problem to install the tools and script in add your Resolver path 
 
 # Installation:
 - git clone https://github.com/mrco24/PH-RECON.git 
