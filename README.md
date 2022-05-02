@@ -1,7 +1,7 @@
 <h1 align="center">
 <a href="https://cooltext.com"><img src="https://images.cooltext.com/5599199.png" width="658" height="108" alt="PH-RECON" /></a>
 </h1>
-<h4 align="center">Bug Bounty Vps Setup Automation Recon Scirpt</h4>
+<h4 align="center">Bug Bounty Automation Recon Scirpt</h4>
 <p align="center">
   <a href="https://github.com/mrco24/PH-RECON">
     <img src="https://img.shields.io/badge/Project-PH--RECON-green">
@@ -15,7 +15,7 @@
 </p>
 
 # Requirements:
-Below are all the tools that must be installed so install these tools first and your terminal must be rooted otherwise it may be a problem to install the tools.
+Below are all the tools that must be installed so install these https://github.com/mrco24/OK-VPS tools first and your terminal must be rooted otherwise it may be a problem to install the tools.
 
 # Installation:
 - git clone https://github.com/mrco24/PH-RECON.git 
