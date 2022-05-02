@@ -80,7 +80,7 @@ Below are all the tools that must be installed so install these https://github.c
 - lfi
 # Gf-patterns-Domain-ip
 - gf
-# Sql-ijection
+# Sql-injection
 - sqlmap
 
 # Author:
