@@ -41,6 +41,7 @@ Below are all the tools that must be installed so install these https://github.c
 - Nuclei scan All Active Subdomain
 - Advance XSS Scanner
 - Sqli Scan All urls 
+- LFI Scan All urls
 
 
 # TOOLS Used:
