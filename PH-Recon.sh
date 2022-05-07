@@ -7,7 +7,7 @@ resolver="/root/wordlist/resolvers.txt"
 domain_enum(){
 for domain in $(cat $host);
 do
-mkdir -p /root/recon/$domain/subdomain /root/recon/$domain/scan /root/recon/$domain/url /root/recon/$domain/gf /root/recon/$domain/xss /root/recon/$domain/js_url /root/recon/$domain/git_dork /root/recon/$domain/SQL
+mkdir -p /root/recon/$domain/subdomain /root/recon/$domain/Subomain-Takeover /root/recon/$domain/scan /root/recon/$domain/url /root/recon/$domain/gf /root/recon/$domain/xss /root/recon/$domain/js_url /root/recon/$domain/git_dork /root/recon/$domain/SQL
 
 subfinder -d $domain -o /root/recon/$domain/subdomain/subfinder.txt
 assetfinder -subs-only $domain | tee /root/recon/$domain/subdomain/assetfinder.txt 
@@ -52,6 +52,14 @@ cat /root/recon/$domain/subdomain/final_sub.txt | httpx -threads 200 -o /root/re
 done
 }
 http_prob
+
+Subdomai_takeover(){
+for domain in $(cat $host);
+do
+subzy -targets /root/recon/$domain/subdomain/active_subdomain.txt > /root/recon/$domain/Subomain-Takeover/poc.txt
+done
+}
+Subdomai_takeover
 
 web_Screenshot(){
 for domain in $(cat $host);
