@@ -42,6 +42,7 @@ Below are all the tools that must be installed so install these https://github.c
 - Advance XSS Scanner
 - Sqli Scan All urls 
 - LFI Scan All urls
+- Open Redirect Scan All urls
 
 
 # TOOLS Used:
@@ -83,7 +84,9 @@ Below are all the tools that must be installed so install these https://github.c
 - gf
 # Sql-injection
 - sqlmap
-
+- nuclei
+# Open Redirect
+- nuclei
 # Author:
  - https://www.facebook.com/MRCO24
  - https://www.youtube.com/channel/UCakzx9mgKjh9V2CjwCJ7kwA
