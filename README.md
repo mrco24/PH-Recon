@@ -59,6 +59,8 @@ Below are all the tools that must be installed so install these https://github.c
 # Subdomain-Resolver
 - massdns
 - httprobe
+# Fuzzing mass Subdomain
+- content discovery
 # Subdomain-takeover
 - subzy
 # Web-screenshot
@@ -73,15 +75,22 @@ Below are all the tools that must be installed so install these https://github.c
 # FUZZ
 - ffuf
 # Vulnerability scan
-- nuclei
+- Nuclei
+# Vulnerability scan Urls
+- Nuclei Scan All urls
 # XSS
 - dalfox
 - kxss
 - Gxss
 # LFI
+- Nuclei
+# Gf-patterns
+- sqli
+- xss
 - lfi
-# Gf-patterns-Domain-ip
-- gf
+- Open Redirect
+- csrf
+- Etc
 # Sql-injection
 - sqlmap
 - nuclei
