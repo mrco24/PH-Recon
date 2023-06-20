@@ -76,12 +76,6 @@ Below are all the tools that must be installed so install these https://github.c
 - Nuclei
 # Vulnerability scan Urls
 - Nuclei Scan All urls
-# XSS
-- dalfox
-- kxss
-- Gxss
-# LFI
-- Nuclei
 # Gf-patterns
 - sqli
 - xss
@@ -89,6 +83,12 @@ Below are all the tools that must be installed so install these https://github.c
 - Open Redirect
 - csrf
 - Etc
+# XSS
+- dalfox
+- kxss
+- Gxss
+# LFI
+- Nuclei
 # Sql-injection
 - sqlmap
 - nuclei
