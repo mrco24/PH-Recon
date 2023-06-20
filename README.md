@@ -59,8 +59,6 @@ Below are all the tools that must be installed so install these https://github.c
 # Subdomain-Resolver
 - massdns
 - httprobe
-# Fuzzing mass Subdomain
-- content discovery
 # Subdomain-takeover
 - subzy
 # Web-screenshot
@@ -72,8 +70,8 @@ Below are all the tools that must be installed so install these https://github.c
 - gau
 - waybackurls
 - paramspider
-# FUZZ
-- ffuf
+# Fuzzing mass Subdomain
+- content discovery
 # Vulnerability scan
 - Nuclei
 # Vulnerability scan Urls
