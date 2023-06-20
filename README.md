@@ -72,9 +72,9 @@ Below are all the tools that must be installed so install these https://github.c
 - paramspider
 # Fuzzing mass Subdomain
 - content discovery
-# Vulnerability scan
+# Vulnerability Scan All Subdomain
 - Nuclei
-# Vulnerability scan Urls
+# Vulnerability Scan All Urls
 - Nuclei Scan All urls
 # Gf-patterns
 - sqli
