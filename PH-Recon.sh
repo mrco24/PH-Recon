@@ -15,9 +15,7 @@ findomain -t $domain | tee /root/PH-Recon/$domain/subdomain/findomain.txt
 #sudomy -d $domain -o /root/PH-Recon/$domain/subdomain/sudomy.txt
 amass enum -active -d $domain -o /root/PH-Recon/$domain/subdomain/amass_sub.txt
 amass enum -passive -d $domain -o /root/PH-Recon/$domain/subdomain/amass_sub_passive.txt
-export CHAOS_KEY=8153077428be89cccb4f3f7e20f45a166c0f5565d9cb118b7c529a5d9ee5bd00
 chaos -d $domain -o /root/PH-Recon/$domain/subdomain/chaos_sub.txt
-/root/OK-VPS/tools/Lilly/./lilly.sh -d $domain -a hLRieliNwbe2vJf8TEXo3keLG2pZcdIP | tee -a /root/PH-Recon/$domain/subdomain/lilly_shodan.txt
 curl --insecure --silent "http://web.archive.org/cdx/search/cdx?url=*.$domain/*&output=text&fl=original&collapse=urlkey" | sed -e 's_https*://__' -e "s/\/.*//" -e 's/:.*//' -e 's/^www\.//' | sed "/@/d" | sed -e 's/\.$//' | sort -u | tee /root/PH-Recon/$domain/subdomain/web.archive.txt
 curl -s "https://crt.sh/?q=%25.$domain&output=json" | jq -r '.[].name_value' | sed 's/\*\.//g' | sort -u | tee /root/PH-Recon/$domain/subdomain/crtsub.txt
 curl -s "https://riddler.io/search/exportcsv?q=pld:$domain" | grep -Po "(([\w.-]*)\.([\w]*)\.([A-z]))\w+" | sort -u | tee /root/PH-Recon/$domain/subdomain/riddlersub.txt
@@ -28,7 +26,6 @@ N;s/^.*\n//;:a;s/^\( *\)\(.*\), /\1\2\n\1/;ta;p;q; }' < <(
 openssl x509 -noout -text -in <(
 openssl s_client -ign_eof 2>/dev/null <<<$'HEAD / HTTP/1.0\r\n\r' \
 -connect $domain:443 ) ) | grep -Po '((http|https):\/\/)?(([\w.-]*)\.([\w]*)\.([A-z]))\w+' | tee /root/PH-Recon/$domain/subdomain/altnamesub.txt
-shuffledns -d $domain -w $wordlist -r /root/wordlist/resolvers.txt -o /root/PH-Recon/$domain/subdomain/shuffledns.txt
 cat /root/PH-Recon/$domain/subdomain/*.txt > /root/PH-Recon/$domain/subdomain/allsub.txt
 cat /root/PH-Recon/$domain/subdomain/allsub.txt | uniq -u | grep $domain | tee -a /root/PH-Recon/$domain/subdomain/all_srot_sub.txt
 
@@ -47,31 +44,200 @@ done
 }
 resolving_domains
 
-#brut(){
-#for domain in $(cat $host);
-#do
-#cp brut.sh /root/PH-Recon/$domain/subdomain/good
-#cd /root/PH-Recon/$domain/subdomain/good
-#./brut.sh passive_resolving_live_sub.txt
-#done
-#}
-#brut
-
-Recursive(){
-for domain in $(cat /root/PH-Recon/$host);
+PH-Recon(){http_probe_1(){
+for domain in $(cat $host);
 do
-cp /root/PH-Recon/web_archive_urls.sh /root/PH-Recon/$domain/url/
-cp /root/PH-Recon/Recursive.sh /root/PH-Recon/$domain/subdomain/good/
-cd /root/PH-Recon/$domain/subdomain/good
-./Recursive.sh passive_resolving_live_sub.txt
+cat /root/PH-Recon/$domain/subdomain/good/passive_resolving_live_sub.txt | httprobe | tee -a /root/recon/$domain/subdomain/good/active_subdomain.txt 
 done
 }
-Recursive
+http_probe_1
 
-PH-Recon(){
-for domain in $(cat /root/PH-Recon/$host);
+Subdomai_takeover(){
+for domain in $(cat $host);
 do
-cd /root/PH-Recon && ./PH-Recon.sh /root/PH-Recon/$host
+nuclei -l /root/recon/$domain/subdomain/good/active_subdomain.txt  -t /root/templates/my-nuclei-templates/My-Nuclei-Templates/subdomain-takeover/subdomain-takeover_detect-all-takeovers.yaml -c 100 -o /root/recon/$domain/Subomain-Takeover/poc.txt -v
 done
 }
-PH-Recon
+Subdomai_takeover
+domain_ip(){
+for domain in $(cat $host);
+do
+gf ip /root/recon/$domain/subdomain/good/massdns_3.txt | sed 's/.*://' > /root/recon/$domain/subdomain/good/ip_sub.txt
+done
+}
+domain_ip
+
+open_port(){
+for domain in $(cat $host);
+do
+naabu -list /root/recon/$domain/subdomain/good/active_subdomain.txt -top-ports 1000 -exclude-ports 80,443,21,22,25 -o /root/recon/$domain/scan/open-port.txt
+naabu -list /root/recon/$domain/subdomain/good/active_subdomain.txt -p - -exclude-ports 80,443,21,22,25 -o /root/recon/$domain/scan/filter-all-open-port.txt
+done
+}
+open_port
+
+web_Screenshot(){
+for domain in $(cat $host);
+do
+cd /root/recon/$domain/Subomain-Screenshots 
+gowitness file -f /root/recon/$domain/subdomain/good/active_subdomain.txt
+done
+}
+web_Screenshot
+
+Http-Request-Smugglingr(){
+for domain in $(cat $host);
+do
+cd /root/OK-VPS/tools/http-request-smuggling | python3 smuggle.py -urls /root/recon/$domain/subdomain/good/active_subdomain.txt | tee -a /root/recon/$domain/scan/Http-Request-Smugglingr.txt
+done
+}
+Http-Request-Smugglingr
+
+Php_My_Admin(){
+for domain in $(cat $host);
+do
+nuclei -t /root/templates/my-nuclei-templates/My-Nuclei-Templates/php-my-admin/phpadmin.yaml -l /root/recon/$domain/subdomain/good/active_subdomain.txt -c 50  -o /root/recon/$domain/scan/nuclei/Php-My-Admin/php_admin.txt -v
+done
+}
+Php_My_Admin
+
+CloudFlare_Checker(){
+for domain in $(cat $host);
+do
+cf-check -d /root/recon/$domain/subdomain/good/active_subdomain.txt | tee -a /root/recon/$domain/subdomain/good/cloudflare_check.txt
+done
+}
+CloudFlare_Checker
+
+
+vuln_scanner(){
+for domain in $(cat $host);
+do
+nuclei -l /root/recon/$domain/subdomain/good/active_subdomain.txt -t /root/nuclei-templates/ -c 50 -o /root/recon/$domain/scan/new-nuclei/All.txt -v
+jaeles scan -c 50 -s /root/templates/jaeles-signatures -U /root/recon/$domain/subdomain/good/active_subdomain.txt -o /root/recon/$domain/scan/jaeles/ -v
+done
+}
+vuln_scanner
+
+find_urls(){
+for domain in $(cat $host);
+do
+cat /root/recon/$domain/subdomain/good/active_subdomain.txt |  gauplus -t 40 | tee -a /root/recon/$domain/url/gaplus-urls.txt
+cat /root/recon/$domain/subdomain/good/active_subdomain.txt | waybackurls | tee /root/recon/$domain/url/waybackurls.txt
+cat /root/recon/$domain/subdomain/good/active_subdomain.txt | hakrawler | tee -a /root/recon/$domain/url/hakrawler-urls.txt
+gospider -S /root/recon/$domain/subdomain/good/active_subdomain.txt -c 10 -d 1 --other-source | grep -o 'https\?://[^ ]\+' > /root/recon/$domain/url/gospider-url.txt
+cat /root/recon/$domain/subdomain/good/active_subdomain.txt | xargs -n 1 -I {} python3 /root/OK-VPS/tools/ParamSpider/paramspider.py --domain {} --level high  | grep -o 'https\?://[^ ]\+' > /root/recon/$domain/url/all_spiderparamters.txt
+cd /root/recon/$domain/url && ./web_archive_urls.sh /root/recon/$domain/subdomain/good/active_subdomain.txt
+cat /root/recon/$domain/url/*.txt > /root/recon/$domain/url/all-url.txt
+cat /root/recon/$domain/url/all-url.txt | sort --unique | grep $domain | tee /root/recon/$domain/url/final-url.txt
+cat /root/recon/$domain/url/final-url.txt | egrep -v "\.woff|\.ttf|\.svg|\.eot|\.png|\.jpep|\.svg|\.css|\.ico" | sed 's/:88//9;s/:443//g' | sort -u >> /root/recon/$domain/url/valid_urls.txt
+done
+}
+find_urls
+
+Url_endpoints(){
+for domain in $(cat $host);
+do
+cat /root/recon/$domain/url/final-url.txt | cut -d "/" -f4- >> /root/recon/$domain/url/url_endpoints.txt
+done
+}
+Url_endpoints
+
+
+gf_patterns(){
+for domain in $(cat $host);
+do
+gf xss /root/recon/$domain/url/valid_urls.txt | tee /root/recon/$domain/gf/xss.txt
+gf my-lfi /root/recon/$domain/url/valid_urls.txt | tee /root/recon/$domain/gf/my-lfi.txt
+gf sqli /root/recon/$domain/url/valid_urls.txt | tee /root/recon/$domain/gf/sqli.txt
+gf lfi /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/lfi.txt
+gf redirect /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/rmy-lfiedirect.txt
+gf aws-keys /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/aws-keys-json.txt
+gf interestingsubs /root/recon/$domain/subdomain/good/active_subdomain.txt |  tee /root/recon/$domain/gf/interestingsubs.txt
+gf s3-buckets /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/s3-buckets.txt
+gf servers /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/servers.txt
+gf debug-pages /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/debug-pages.txt
+gf debug_logic /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/debug_logic.txt
+gf img-traversal /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/img-traversal.txt
+gf php-sources /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/php-sources.txt
+gf upload-fields /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/upload-fields.txt
+gf php-errors /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/php-errors.txt
+gf http-auth /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/http-auth.txt
+gf idor /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/idor.txt
+gf interestingparams /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/interestingparams.txt
+gf interestingEXT /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/interestingEXT.txt
+gf rce /root/recon/$domain/url/valid_urls.txt |  tee /root/recon/$domain/gf/rce.txt
+done
+}
+gf_patterns
+
+SQL(){
+for domain in $(cat $host);
+do
+nuclei -l /root/recon/$domain/url/valid_urls.txt -t /root/templates/Best-Mrco24/error-based-sql-injection.yaml -c 100  -o /root/recon/$domain/sql/error-based-sql-injection.txt -v
+nuclei -l /root/recon/$domain/url/valid_urls.txt -t /root/templates/Best-Mrco24/SQLInjection_ERROR.yaml -c 100  -o /root/recon/$domain/sql/SQLInjection_ERROR.txt -v
+nuclei -l /root/recon/$domain/url/valid_urls.txt -t /root/templates/Best-Mrco24/header-blind-time-sql-injection.yaml -c 100  -o /root/recon/$domain/sql/header-blind-time-sql-injection.txt -v
+nuclei -l /root/recon/$domain/url/valid_urls.txt -t /root/templates/Best-Mrco24/header-blind-sql-injection.yaml -c 100  -o /root/recon/$domain/sql/header-blind-sql-injection.txt -v
+sqlmap -m /root/recon/$domain/url/valid_urls.txt --batch --risk 3  --random-agent | tee -a /root/recon/$domain/sql/sqlmap_sql_url.txt
+done
+}
+SQL
+
+
+Refactors_xss(){
+for domain in $(cat $host);
+do
+cat /root/recon/$domain/url/valid_urls.txt | Gxss -o /root/recon/$domain/xss/gxss.txt
+cat /root/recon/$domain/url/valid_urls.txt | kxss | tee -a  /root/recon/$domain/xss/kxss_url.txt
+cat /root/recon/$domain/xss/kxss_url.txt | sed 's/.*on//' | sed 's/=.*/=/' > /root/recon/$domain/xss/kxss_url_active.txt
+cat /root/recon/$domain/xss/kxss_url_active.txt | dalfox pipe | tee /root/recon/$domain/xss/kxss_dalfoxss.txt
+cat /root/recon/$domain/xss/gxss.txt | dalfox pipe | tee /root/recon/$domain/xss/gxss_dalfoxss.txt
+cat /root/recon/$domain/subdomain/good/active_subdomain.txt | /root/OK-VPS/tools/findom-xss/./findom-xss.sh
+done
+}
+Refactors_xss
+
+Bilnd_xss(){
+for domain in $(cat $host);
+do
+nuclei -l /root/recon/$domain/url/valid_urls.txt -t /root/templates/Best-Mrco24/header_blind_xss.yaml -c 100  -o /root/recon/$domain/xss/header_blind_xss.txt -v
+done
+}
+Bilnd_xss
+
+dir-traversal(){
+for domain in $(cat $host);
+do
+nuclei -l /root/recon/$domain/url/valid_urls.txt -t /root/templates/Best-Mrco24/dir-traversal.yaml -c 100  -o /root/recon/$domain/scan/nuclei/dir-traversal.txt -v
+jaeles scan -c 50 -s /root/templates/best/lfi-header-01.yaml -U /root/recon/$domain/url/valid_urls.txt -o /root/recon/$domain/scan/my-jaeles/lfi-header -v
+jaeles scan -c 50 -s /root/templates/best/lfi-param-01.yaml -U /root/recon/$domain/url/valid_urls.txt -o /root/recon/$domain/scan/my-jaeles/lfi-param -v
+jaeles scan -c 50 -s /root/templates/best/lfi-header-windows-01.yaml -U /root/recon/$domain/url/valid_urls.txt -o /root/recon/$domain/scan/my-jaeles/lfi-header-windows -v
+done
+}
+dir-traversal
+
+Nuclei Fuzz_Endpoint(){
+for domain in $(cat $host);
+do
+nuclei -l /root/recon/$domain/url/valid_urls.txt -t /root/templates/fuzzing-templates/  -o /root/recon/$domain/scan/nuclei/urls_fuzzing-templates__scan.txt -v
+done
+}
+Nuclei Fuzz_Endpoint
+
+
+Fuzz_Endpoint(){
+for domain in $(cat $host);
+do
+dirsearch -l /root/recon/$domain/subdomain/good/active_subdomain.txt -w /root/recon/$domain/url/url_endpoints.txt -i 200,301,302 | tee -a /root/recon/$domain/dri/Endpoint_Dir.txt
+done
+}
+Fuzz_Endpoint
+
+FUZZ_active(){
+for domain in $(cat $host);
+do
+dirsearch -l /root/recon/$domain/subdomain/good/active_subdomain.txt  > /root/recon/$domain/dri/dri_activ.txt
+done
+}
+FUZZ_active
+
