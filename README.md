@@ -30,7 +30,6 @@ Below are all the tools that must be installed so install these https://github.c
 - Resolves all the subdomains using massdns
 - Check http/https services on the given domains using httpx tool.
 - All Active Subdomain Screenshot
-- Able to separate all ip of all subdomain using gf tools
 - This script will collect all the urls using Waybackurl, Gau, gospider, ParamSpider, hakrawler.
 - Gather all the urls and put them in a single .txt file.
 - This script will  Able to sort all the good Urals by filtering.
@@ -38,11 +37,16 @@ Below are all the tools that must be installed so install these https://github.c
 - Gf tool and its patterns installation and also will set their path automatically.
 - It will check for the Following Vulnerablities:
 - Subdomain takeover
+- Http-Request-Smugglingr
+- Open_Port_Find
+- CloudFlare_Checker
 - Nuclei scan All Active Subdomain
 - Advance XSS Scanner
 - Sqli Scan All urls 
 - LFI Scan All urls
 - Open Redirect Scan All urls
+- Fuzzing mass Subdomain
+- Fuzzing All Urls Endpoint
 
 
 # TOOLS Used:
@@ -57,12 +61,19 @@ Below are all the tools that must be installed so install these https://github.c
 - bufferover.run
 - jldc.me
 # Subdomain-Resolver
-- massdns
 - httprobe
 # Subdomain-takeover
-- subzy
+- Nuclei
+# Http-Request-Smugglingr
+- Smuggle
+# Open_Port_Find
+- Naabu
 # Web-screenshot
 - Gowitness
+# CloudFlare_Checker
+- Cf-Chack
+# Vulnerability Scan All Subdomain
+- Nuclei
 # Urls-find
 - Gospider
 - Hakrawler
@@ -70,12 +81,8 @@ Below are all the tools that must be installed so install these https://github.c
 - gau
 - waybackurls
 - paramspider
-# Fuzzing mass Subdomain
-- content discovery
-# Vulnerability Scan All Subdomain
-- Nuclei
-# Vulnerability Scan All Urls
-- Nuclei Scan All urls
+# Url_endpoints
+- Using Bash Script
 # Gf-patterns
 - sqli
 - xss
@@ -83,18 +90,25 @@ Below are all the tools that must be installed so install these https://github.c
 - Open Redirect
 - csrf
 - Etc
+# Sql-injection
+- sqlmap
+- nuclei
 # XSS
 - dalfox
 - kxss
 - Gxss
+
+# Bilnd_xss
+
 # LFI
 - Nuclei
-# Sql-injection
-- sqlmap
-- nuclei
 # Open Redirect
 - nuclei
+# Fuzzing mass Subdomain
+- content discovery
+# Fuzzing All Urls Endpoint
+- content discovery
 # Author:
  - https://www.facebook.com/MRCO24
- - https://www.youtube.com/channel/UCakzx9mgKjh9V2CjwCJ7kwA
+ - https://www.youtube.com/@mrco24ln/videos
  - https://github.com/mrco24
