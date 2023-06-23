@@ -41,13 +41,13 @@ done
 }
 resolving_domains
 
-http_probe_1(){
+http_probe(){
 for domain in $(cat $host);
 do
 cat /root/PH-Recon/$domain/subdomain/good/passive_resolving_live_sub.txt | httprobe | tee -a /root/recon/$domain/subdomain/good/active_subdomain.txt 
 done
 }
-http_probe_1
+http_probe
 
 Subdomai_takeover(){
 for domain in $(cat $host);
