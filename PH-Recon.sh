@@ -56,13 +56,6 @@ nuclei -l /root/recon/$domain/subdomain/good/active_subdomain.txt  -t /root/temp
 done
 }
 Subdomai_takeover
-domain_ip(){
-for domain in $(cat $host);
-do
-gf ip /root/recon/$domain/subdomain/good/massdns_3.txt | sed 's/.*://' > /root/recon/$domain/subdomain/good/ip_sub.txt
-done
-}
-domain_ip
 
 open_port(){
 for domain in $(cat $host);
