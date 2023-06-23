@@ -41,7 +41,7 @@ done
 }
 resolving_domains
 
-PH-Recon(){http_probe_1(){
+http_probe_1(){
 for domain in $(cat $host);
 do
 cat /root/PH-Recon/$domain/subdomain/good/passive_resolving_live_sub.txt | httprobe | tee -a /root/recon/$domain/subdomain/good/active_subdomain.txt 
