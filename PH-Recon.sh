@@ -2,7 +2,7 @@
 
 host=$1
 wordlist="/root/wordlist/SecLists/Discovery/DNS/dns-Jhaddix.txt"
-resolver="/root/wordlist/resolvers.txt"
+resolver="/root/PH-Recon/resolvers.txt"
 
 domain_enum(){
 for domain in $(cat $host);
