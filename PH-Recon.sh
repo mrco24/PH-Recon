@@ -32,18 +32,10 @@ domain_enum
 resolving_domains(){
 for domain in $(cat $host);
 do
-httpx -l /root/PH-PH-Recon/$domain/subdomain/all_srot_sub.txt -threads 150 -o /root/PH-PH-Recon/$domain/subdomain/good/passive_resolving_live_sub.txt
+httpx -l /root/PH-PH-Recon/$domain/subdomain/all_srot_sub.txt -threads 150 -o /root/PH-PH-Recon/$domain/subdomain/good/active_subdomain.txt 
 done
 }
 resolving_domains
-
-http_probe(){
-for domain in $(cat $host);
-do
-cat /root/PH-PH-Recon/$domain/subdomain/good/passive_resolving_live_sub.txt | httprobe | tee -a /root/PH-Recon/$domain/subdomain/good/active_subdomain.txt 
-done
-}
-http_probe
 
 Subdomai_takeover(){
 for domain in $(cat $host);
