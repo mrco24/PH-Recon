@@ -57,8 +57,7 @@ open_port
 web_Screenshot(){
 for domain in $(cat $host);
 do
-cd /root/PH-Recon/$domain/Subomain-Screenshots 
-gowitness file -f /root/PH-Recon/$domain/subdomain/good/active_subdomain.txt
+httpx -l /root/PH-Recon/$domain/subdomain/good/active_subdomain.txt
 done
 }
 web_Screenshot
@@ -70,14 +69,6 @@ web_Screenshot
 #done
 #}
 #Http-Request-Smugglingr
-
-Php_My_Admin(){
-for domain in $(cat $host);
-do
-nuclei -t /root/templates/my-nuclei-templates/My-Nuclei-Templates/php-my-admin/phpadmin.yaml -l /root/PH-Recon/$domain/subdomain/good/active_subdomain.txt -c 50  -o /root/PH-Recon/$domain/scan/nuclei/Php-My-Admin/php_admin.txt -v
-done
-}
-Php_My_Admin
 
 CloudFlare_Checker(){
 for domain in $(cat $host);
