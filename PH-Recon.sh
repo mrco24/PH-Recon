@@ -71,13 +71,13 @@ done
 }
 web_Screenshot
 
-Http-Request-Smugglingr(){
-for domain in $(cat $host);
-do
-cd /root/OK-VPS/tools/http-request-smuggling | python3 smuggle.py -urls /root/PH-PH-Recon/$domain/subdomain/good/active_subdomain.txt | tee -a /root/PH-Recon/$domain/scan/Http-Request-Smugglingr.txt
-done
-}
-Http-Request-Smugglingr
+#Http-Request-Smugglingr(){
+#for domain in $(cat $host);
+#do
+#cd /root/OK-VPS/tools/http-request-smuggling | python3 smuggle.py -urls /root/PH-PH-Recon/$domain/subdomain/good/active_subdomain.txt | tee -a /root/PH-Recon/$domain/scan/Http-Request-Smugglingr.txt
+#done
+#}
+#Http-Request-Smugglingr
 
 Php_My_Admin(){
 for domain in $(cat $host);
@@ -158,15 +158,11 @@ gf_patterns
 SQL(){
 for domain in $(cat $host);
 do
-nuclei -l /root/PH-Recon/$domain/url/valid_urls.txt -t /root/templates/Best-Mrco24/error-based-sql-injection.yaml -c 100  -o /root/PH-Recon/$domain/sql/error-based-sql-injection.txt -v
-nuclei -l /root/PH-Recon/$domain/url/valid_urls.txt -t /root/templates/Best-Mrco24/SQLInjection_ERROR.yaml -c 100  -o /root/PH-Recon/$domain/sql/SQLInjection_ERROR.txt -v
-nuclei -l /root/PH-Recon/$domain/url/valid_urls.txt -t /root/templates/Best-Mrco24/header-blind-time-sql-injection.yaml -c 100  -o /root/PH-Recon/$domain/sql/header-blind-time-sql-injection.txt -v
-nuclei -l /root/PH-Recon/$domain/url/valid_urls.txt -t /root/templates/Best-Mrco24/header-blind-sql-injection.yaml -c 100  -o /root/PH-Recon/$domain/sql/header-blind-sql-injection.txt -v
+mrco24-error-sql -f /root/PH-Recon/$domain/url/valid_urls.txt -t 40 -o /root/PH-Recon/$domain/sql/error-sql-injection.txt -v
 sqlmap -m /root/PH-Recon/$domain/url/valid_urls.txt --batch --risk 3  --random-agent | tee -a /root/PH-Recon/$domain/sql/sqlmap_sql_url.txt
 done
 }
 SQL
-
 
 Refactors_xss(){
 for domain in $(cat $host);
@@ -181,6 +177,14 @@ done
 }
 Refactors_xss
 
+dir-traversal(){
+for domain in $(cat $host);
+do
+mrco24-lfi -f /root/PH-Recon/$domain/url/valid_urls.txt -p /root/wordlist/mrco24-wordlist/lfi_payloads.txt -t 50 -o /root/PH-Recon/$domain/scan/lfi.txt
+done
+}
+dir-traversal
+
 Bilnd_xss(){
 for domain in $(cat $host);
 do
@@ -188,15 +192,6 @@ nuclei -l /root/PH-Recon/$domain/url/valid_urls.txt -t /root/templates/Best-Mrco
 done
 }
 Bilnd_xss
-
-dir-traversal(){
-for domain in $(cat $host);
-do
-nuclei -l /root/PH-Recon/$domain/url/valid_urls.txt -t /root/templates/Best-Mrco24/dir-traversal.yaml -c 100  -o /root/PH-Recon/$domain/scan/nuclei/dir-traversal.txt -v
-mrco24-lfi -f /root/PH-Recon/$domain/url/valid_urls.txt -p /root/wordlist/mrco24-wordlist/lfi_payloads.txt -t 50 -o /root/PH-Recon/$domain/scan/lfi.txt
-done
-}
-dir-traversal
 
 Fuzz_Endpoint(){
 for domain in $(cat $host);
